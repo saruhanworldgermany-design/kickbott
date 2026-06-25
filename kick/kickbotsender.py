@@ -166,23 +166,41 @@ class ProxyPool:
 
 def build_proxy_entry(line: str) -> Optional[ProxyEntry]:
     line = line.strip()
-    if "@" not in line:
-        return None
-    auth_part, host_part = line.rsplit("@", 1)
-    if ":" not in auth_part or ":" not in host_part:
-        return None
-    username, password = auth_part.split(":", 1)
-    host, port = host_part.rsplit(":", 1)
     
-    username = username.strip()
-    password = password.strip()
-    host = host.strip()
-    port = port.strip()
-    
-    if " " in username or " " in password or " " in host or " " in port:
-        return None
+    # Extract protocol if present (e.g. socks5://)
+    protocol = "http"
+    if "://" in line:
+        protocol, line = line.split("://", 1)
+        protocol = protocol.lower()
+
+    if "@" in line:
+        auth_part, host_part = line.rsplit("@", 1)
+        if ":" not in auth_part or ":" not in host_part:
+            return None
+        username, password = auth_part.split(":", 1)
+        host, port = host_part.rsplit(":", 1)
         
-    http_url = f"http://{username}:{password}@{host}:{port}"
+        username = username.strip()
+        password = password.strip()
+        host = host.strip()
+        port = port.strip()
+        
+        if " " in username or " " in password or " " in host or " " in port:
+            return None
+            
+        http_url = f"{protocol}://{username}:{password}@{host}:{port}"
+    else:
+        if ":" not in line:
+            return None
+        host, port = line.rsplit(":", 1)
+        host = host.strip()
+        port = port.strip()
+        
+        if " " in host or " " in port:
+            return None
+            
+        http_url = f"{protocol}://{host}:{port}"
+
     ws_proxy = None
     if Proxy is not None:
         try:
