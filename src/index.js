@@ -311,11 +311,27 @@ client.startNextTask = async () => {
     // DM gonderilemezse bile islemi durdurmayip arka planda calistiralim
   }
 
-  // Python islemini baslatma
   const scriptPath = path.join(__dirname, '..', 'kick', 'kickbotsender.py');
-  const pythonPath = process.platform === 'win32' ? 'python' : 'python3';
+  let pythonPath = process.platform === 'win32' ? 'python' : 'python3';
 
-  console.log(`Python scripti calistiriliyor: ${scriptPath} - Kanal: ${task.channelName} - Miktar: ${task.amount}`);
+  if (process.platform !== 'win32') {
+    const possiblePaths = [
+      path.join(__dirname, '..', '.venv', 'bin', 'python3'),
+      path.join(__dirname, '..', '.venv', 'bin', 'python'),
+      '/app/.venv/bin/python3',
+      '/app/.venv/bin/python',
+      '/opt/venv/bin/python3',
+      '/opt/venv/bin/python'
+    ];
+    for (const p of possiblePaths) {
+      if (fs.existsSync(p)) {
+        pythonPath = p;
+        break;
+      }
+    }
+  }
+
+  console.log(`Python scripti calistiriliyor: ${scriptPath} - Python yolu: ${pythonPath} - Kanal: ${task.channelName} - Miktar: ${task.amount}`);
 
   const child = spawn(pythonPath, [
     scriptPath,

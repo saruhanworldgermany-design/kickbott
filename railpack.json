@@ -8,7 +8,7 @@
     "install": {
       "commands": [
         "npm install",
-        "pip install -r requirements.txt --break-system-packages || pip3 install -r requirements.txt --break-system-packages || pip install -r requirements.txt || pip3 install -r requirements.txt"
+        "/app/.venv/bin/pip install -r requirements.txt || .venv/bin/pip install -r requirements.txt || pip install -r requirements.txt --break-system-packages || pip3 install -r requirements.txt --break-system-packages || pip install -r requirements.txt || pip3 install -r requirements.txt"
       ]
     }
   }
