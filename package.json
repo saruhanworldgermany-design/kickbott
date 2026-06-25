@@ -1,0 +1,15 @@
+{
+  "name": "kick-viewer-bot",
+  "version": "1.0.0",
+  "description": "Discord Kick Viewer Bot with Components V2",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "deploy": "node src/deploy-commands.js"
+  },
+  "dependencies": {
+    "@discordjs/voice": "^0.19.2",
+    "discord.js": "^14.19.0",
+    "dotenv": "^16.4.5"
+  }
+}
